@@ -30,8 +30,7 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,const C
             tmp.x = X;
             tmp.y = Y;
             //Calcul des poids associés à un point x d'un segment [p1;p2]
-            double poida = 1 - sqrt((p1.x - tmp.x)*(p1.x - tmp.x)+(p1.y - tmp.y)*(p1.y - tmp.y))
-            /sqrt((p1.x - p2.x)*(p1.x - p2.x)+(p1.y - p2.y)*(p1.y - p2.y));
+            double poida = 1 - p1.Distance(tmp)/p1.Distance(p2);
             double poidb = 1 - poida;
 
             SetPoint(tmp, c2* poidb + c1*poida);
@@ -51,8 +50,7 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,const C
             tmp.x = X;
             tmp.y = Y;
             //Calcul des poids associés à un point x d'un segment [p1;p2]
-             double poida = 1 - sqrt((p1.x - tmp.x)*(p1.x - tmp.x)+(p1.y - tmp.y)*(p1.y - tmp.y))
-            /sqrt((p1.x - p2.x)*(p1.x - p2.x)+(p1.y - p2.y)*(p1.y - p2.y));
+            double poida = 1 - p1.Distance(tmp)/p1.Distance(p2);
             double poidb = 1 - poida;
 
             SetPoint(tmp, c2* poida + c1*poidb);
@@ -100,6 +98,46 @@ void Buffer::DrawPhongTriangle(const Coord2D p1, const Coord2D p2,
 		const Coord3D normal1, const Coord3D normal2, const Coord3D normal3,
 		const AmbientLight & ambientLight, const PointLight & pointLight)
 {
-	// compléter ici
+    //Initialise les structures de données du scanline
+    scanLineComputer.Init();
+    //Calcule les limites du triangle (p1,p2,p3) selon la méthode scanline
+    scanLineComputer.Compute(p1, p2, p3);
+    Coord3D leftPosition, rightPosition, leftNormal, rightNormal;
+    Color leftColor, rightColor;
+    //Pour toutes les lignes dans le triangle
+    for(int i = scanLineComputer.ymin ; i <= scanLineComputer.ymax; i++){
+        Coord2D leftPoint(scanLineComputer.left.data[i], i),
+                rightPoint(scanLineComputer.right.data[i], i);
+        leftPosition = posi1*scanLineComputer.leftweight.data[i].data[0] +
+                       posi2*scanLineComputer.leftweight.data[i].data[1] +
+                       posi3*scanLineComputer.leftweight.data[i].data[2];
+        rightPosition = posi1*scanLineComputer.rightweight.data[i].data[0] +
+                       posi2*scanLineComputer.rightweight.data[i].data[1] +
+                       posi3*scanLineComputer.rightweight.data[i].data[2];
+        leftNormal = normal1*scanLineComputer.leftweight.data[i].data[0] +
+                     normal2*scanLineComputer.leftweight.data[i].data[1] +
+                     normal3*scanLineComputer.leftweight.data[i].data[2];
+        rightNormal = normal1*scanLineComputer.rightweight.data[i].data[0] +
+                      normal2*scanLineComputer.rightweight.data[i].data[1] +
+                      normal3*scanLineComputer.rightweight.data[i].data[2];
+        leftColor = c1*scanLineComputer.leftweight.data[i].data[0] +
+                    c2*scanLineComputer.leftweight.data[i].data[1] +
+                    c3*scanLineComputer.leftweight.data[i].data[2];
+        rightColor = c1*scanLineComputer.rightweight.data[i].data[0] +
+                    c2*scanLineComputer.rightweight.data[i].data[1] +
+                    c3*scanLineComputer.rightweight.data[i].data[2];
+        //Pour toutes les pointes dans cette ligne
+        for(int j = scanLineComputer.left.data[i]; j <= scanLineComputer.right.data[i]; j++){
+            //Calcule le point
+            Coord2D p(j, i);
+            //Calcul des poids associés à un point x d'un segment [leftPoint;rightPoint]
+            double poida = 1 - leftPoint.Distance(p)/leftPoint.Distance(rightPoint);
+            double poidb = 1 - poida;
+            Color c1 = pointLight.GetColor(leftPosition*poida + rightPosition*poidb,
+                                           leftNormal*poida + rightNormal*poidb);
+            Color c = c1 + ambientLight.ambientColor;
+            SetPoint(p, (leftColor*poida + rightColor*poidb)*c);
+        }
+    }
 }
 
