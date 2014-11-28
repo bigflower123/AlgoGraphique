@@ -10,18 +10,16 @@ void Renderer::DrawFilaire()
         //sinon les couleurs sont sur les sommets
         if(drawable->colorOnFace){
             //Dessiner les 3 lignes
+            Color color = drawable->faceColors.data[i];
             buffer->DrawLine(renderable.points2D.data[drawable->faces.data[i].index1],
                              renderable.points2D.data[drawable->faces.data[i].index2],
-                             drawable->faceColors.data[drawable->faces.data[i].index1],
-                             drawable->faceColors.data[drawable->faces.data[i].index2]);
+                             color, color);
             buffer->DrawLine(renderable.points2D.data[drawable->faces.data[i].index2],
                              renderable.points2D.data[drawable->faces.data[i].index3],
-                             drawable->faceColors.data[drawable->faces.data[i].index2],
-                             drawable->faceColors.data[drawable->faces.data[i].index3]);
+                             color, color);
             buffer->DrawLine(renderable.points2D.data[drawable->faces.data[i].index1],
                              renderable.points2D.data[drawable->faces.data[i].index3],
-                             drawable->faceColors.data[drawable->faces.data[i].index1],
-                             drawable->faceColors.data[drawable->faces.data[i].index3]);
+                             color, color);
         }else{
             buffer->DrawLine(renderable.points2D.data[drawable->faces.data[i].index1],
                              renderable.points2D.data[drawable->faces.data[i].index2],
@@ -49,18 +47,16 @@ void Renderer::DrawFilaireCache()
             //sinon les couleurs sont sur les sommets
             if(drawable->colorOnFace){
                 //Dessiner les 3 lignes
+                Color color = drawable->faceColors.data[i];
                 buffer->DrawLine(renderable.points2D.data[drawable->faces.data[i].index1],
                                  renderable.points2D.data[drawable->faces.data[i].index2],
-                                 drawable->faceColors.data[drawable->faces.data[i].index1],
-                                 drawable->faceColors.data[drawable->faces.data[i].index2]);
+                                 color, color);
                 buffer->DrawLine(renderable.points2D.data[drawable->faces.data[i].index2],
                                  renderable.points2D.data[drawable->faces.data[i].index3],
-                                 drawable->faceColors.data[drawable->faces.data[i].index2],
-                                 drawable->faceColors.data[drawable->faces.data[i].index3]);
+                                 color, color);
                 buffer->DrawLine(renderable.points2D.data[drawable->faces.data[i].index1],
                                  renderable.points2D.data[drawable->faces.data[i].index3],
-                                 drawable->faceColors.data[drawable->faces.data[i].index1],
-                                 drawable->faceColors.data[drawable->faces.data[i].index3]);
+                                 color, color);
             }else{
                 buffer->DrawLine(renderable.points2D.data[drawable->faces.data[i].index1],
                                  renderable.points2D.data[drawable->faces.data[i].index2],

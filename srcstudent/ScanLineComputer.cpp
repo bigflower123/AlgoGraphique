@@ -11,8 +11,12 @@ void ScanLineComputer::AddEdge(const Coord2D p1, const Coord2D p2,
 {
 	// calculer les points de la bordure et appeler AddPoint
 	// on utitlise la méthode de Bresenheim pour calculer les points du segment [p1,p2] et on les ajoute via la méthode AddPoint
-    int X, Y, LongX, LongY, Critere, Const1, Const2, IncX, IncY, cpt;
-    Coord2D tmp;
+    int X, Y;
+    int LongX, LongY;
+    int Critere;
+    int Const1, Const2;
+    int IncX, IncY, Cpt;
+
     X = p1.x;
     Y = p1.y;
     LongX = p2.x - X;
@@ -33,7 +37,7 @@ void ScanLineComputer::AddEdge(const Coord2D p1, const Coord2D p2,
         Const1 = 2 * (LongY - LongX);
         Const2 = 2 * LongY;
         Critere = Const2 - LongX;
-        for(cpt = 1; cpt <= LongX; cpt++){
+        for(Cpt = 1; Cpt <= LongX; Cpt++){
             //Si les points est dans la zone de dessine
             if(Y > 0  && Y < height){
                 //On appele AddPoint
@@ -51,7 +55,7 @@ void ScanLineComputer::AddEdge(const Coord2D p1, const Coord2D p2,
         Const1 = 2 * (LongX - LongY);
         Const2 = 2 * LongX;
         Critere = Const2 - LongY;
-        for(cpt = 1; cpt <= LongY; cpt++){
+        for(Cpt = 1; Cpt <= LongY; Cpt++){
             //Si les points est dans la zone de dessine
             if(Y > 0  && Y < height){
                 //On appele AddPoint

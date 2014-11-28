@@ -4,10 +4,16 @@
 /** l'algorithme de tracé de ligne de Bresenham */
 void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,const Color c2)
 {
-    int X, Y, LongX, LongY, Critere, Const1, Const2, IncX, IncY, cpt;
-    Coord2D tmp;
+    int X, Y;
+    int LongX, LongY;
+    int Critere;
+    int Const1, Const2;
+    int IncX, IncY, Cpt;
+    double poida, poidb;
+    Coord2D currentPoint;
     X = p1.x;
     Y = p1.y;
+    //Calculer les longeurs entre p1 et p2
     LongX = p2.x - X;
     LongY = p2.y - Y;
     if(LongX >= 0){
@@ -26,14 +32,14 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,const C
         Const1 = 2 * (LongY - LongX);
         Const2 = 2 * LongY;
         Critere = Const2 - LongX;
-        for(cpt = 1; cpt <= LongX; cpt++){
-            tmp.x = X;
-            tmp.y = Y;
+        for(Cpt = 1; Cpt <= LongX; Cpt++){
+            currentPoint.x = X;
+            currentPoint.y = Y;
             //Calcul des poids associés à un point x d'un segment [p1;p2]
-            double poida = 1 - p1.Distance(tmp)/p1.Distance(p2);
-            double poidb = 1 - poida;
-
-            SetPoint(tmp, c2* poidb + c1*poida);
+            poida = 1 - p1.Distance(currentPoint)/p1.Distance(p2);
+            poidb = 1 - poida;
+            //Dessinier le point
+            SetPoint(currentPoint, c2* poidb + c1*poida);
             if(Critere > 0){
                 Y += IncY;
                 Critere += Const1;
@@ -46,14 +52,14 @@ void Buffer::DrawLine(const Coord2D p1, const Coord2D p2, const Color c1,const C
         Const1 = 2 * (LongX - LongY);
         Const2 = 2 * LongX;
         Critere = Const2 - LongY;
-        for(cpt = 1; cpt <= LongY; cpt++){
-            tmp.x = X;
-            tmp.y = Y;
+        for(Cpt = 1; Cpt <= LongY; Cpt++){
+            currentPoint.x = X;
+            currentPoint.y = Y;
             //Calcul des poids associés à un point x d'un segment [p1;p2]
-            double poida = 1 - p1.Distance(tmp)/p1.Distance(p2);
-            double poidb = 1 - poida;
-
-            SetPoint(tmp, c2* poida + c1*poidb);
+            poida = 1 - p1.Distance(currentPoint)/p1.Distance(p2);
+            poidb = 1 - poida;
+            //Dessiner le point
+            SetPoint(currentPoint, c2* poida + c1*poidb);
             if(Critere > 0){
                 X += IncX;
                 Critere += Const1;
